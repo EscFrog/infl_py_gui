@@ -1,4 +1,5 @@
 import tkinter as tk
+import os
 
 root = tk.Tk()
 root.title("escfrog GUI")
@@ -18,7 +19,9 @@ btn4.pack()
 btn5 = tk.Button(root, fg="yellow", bg="red", text="버튼5")
 btn5.pack()
 
-btn_image = tk.PhotoImage(file="btn-img.png")
+curdir = os.curdir
+img_path = os.path.join(curdir, "basic", "btn-img.png")
+btn_image = tk.PhotoImage(file=img_path)
 btn6 = tk.Button(root, image=btn_image)
 btn6.pack()
 
