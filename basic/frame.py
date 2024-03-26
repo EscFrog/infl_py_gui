@@ -1,6 +1,6 @@
-from tkinter import *
+import tkinter as tk
 
-root = Tk()
+root = tk.Tk()
 root.title("escfrog GUI")
 # root.geometry("640x480+300+300") # 가로 크기, 세로 크기, x좌표, y좌표
 root.geometry("640x480") # 가로 크기, 세로 크기, x좌표, y좌표
