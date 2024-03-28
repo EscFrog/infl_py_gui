@@ -36,5 +36,7 @@ menu_lang.add_radiobutton(label="Java")
 menu_lang.add_radiobutton(label="C++")
 menu_view.add_cascade(label="Language", menu=menu_lang)
 
+ # 이 부분이 중요. 이 설정을 해줘야 기존 python 메뉴가 새로 만든 메뉴로 교체된다.
 root.config(menu=menu)
+
 root.mainloop()
