@@ -93,7 +93,9 @@ btn_start = tk.Button(frame_run, padx=5, pady=5, text="시작", width=12, comman
   cmb_space,
   cmb_format,
   listbox_file,
-  txt_dest_path
+  txt_dest_path,
+  p_var,
+  progress_bar
   ))
 btn_start.pack(side="right", padx=5, pady=5)
 

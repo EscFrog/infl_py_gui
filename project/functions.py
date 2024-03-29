@@ -17,7 +17,7 @@ def del_file(listbox_file):
     listbox_file.delete(index)
 
 
-# 저장 경로 (폴더)
+# 저장 경로 선택(폴더)
 def browse_dest_path(txt_dest_path):
   folder_selected = filedialog.askdirectory(initialdir="/Users/*/Pictures")
   if folder_selected is None:
@@ -27,7 +27,7 @@ def browse_dest_path(txt_dest_path):
   txt_dest_path.insert(0, folder_selected)
 
 
-def merge_image(file_list, dest_path):
+def merge_image(file_list, dest_path, p_var, progress_bar):
   images = [Image.open(x) for x in file_list]
 
   widths = [x.size[0] for x in images]
@@ -38,10 +38,15 @@ def merge_image(file_list, dest_path):
 
   # 스케치북 준비
   result_img = Image.new("RGB", (max_width, total_height), (255, 255, 255)) # 배경 캔버스 생성
+
   y_offset = 0 # y 위치 조정을 위한 변수
-  for img in images:
+  for idx, img in enumerate(images):
     result_img.paste(img, (0, y_offset))
     y_offset += img.size[1] # height 값 만큼 더해줌
+
+    progress = (idx + 1) / len(images) * 100 # 실제 percent 정보를 계산
+    p_var.set(progress)
+    progress_bar.update()
   
   final_path = os.path.join(dest_path, "result.jpg")
   result_img.save(final_path)
@@ -49,7 +54,7 @@ def merge_image(file_list, dest_path):
 
 
 # 병합 시작
-def start(cmb_width, cmb_space, cmb_format, listbox_file, txt_dest_path):
+def start(cmb_width, cmb_space, cmb_format, listbox_file, txt_dest_path, p_var, progress_bar):
   # 각 옵션들 값을 확인
   print("가로넓이 : ", cmb_width.get())
   print("간격 : ", cmb_space.get())
@@ -68,4 +73,4 @@ def start(cmb_width, cmb_space, cmb_format, listbox_file, txt_dest_path):
     return
   
   # 병합 함수 실행
-  merge_image(file_list, dest_path)
+  merge_image(file_list, dest_path, p_var, progress_bar)
