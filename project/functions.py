@@ -20,14 +20,15 @@ def del_file(listbox_file):
 # 저장 경로 선택(폴더)
 def browse_dest_path(txt_dest_path):
   folder_selected = filedialog.askdirectory(initialdir="/Users/*/Pictures")
+
   if folder_selected is None:
     return
-  # print(folder_selected)
+
   txt_dest_path.delete(0, END)
   txt_dest_path.insert(0, folder_selected)
 
 
-def merge_image(file_list, dest_path, p_var, progress_bar):
+def merge_image(file_list, dest_path, gui_elements):
   images = [Image.open(x) for x in file_list]
 
   widths = [x.size[0] for x in images]
@@ -44,9 +45,9 @@ def merge_image(file_list, dest_path, p_var, progress_bar):
     result_img.paste(img, (0, y_offset))
     y_offset += img.size[1] # height 값 만큼 더해줌
 
-    progress = (idx + 1) / len(images) * 100 # 실제 percent 정보를 계산
-    p_var.set(progress)
-    progress_bar.update()
+    progress = (idx + 1) / len(images) * 100  # 실제 percent 정보를 계산
+    gui_elements.p_var.set(progress)  # p_var를 통해 프로그레스 바 업데이트
+    gui_elements.progress_bar.update()  # UI 업데이트
   
   final_path = os.path.join(dest_path, "result.jpg")
   result_img.save(final_path)
@@ -54,23 +55,23 @@ def merge_image(file_list, dest_path, p_var, progress_bar):
 
 
 # 병합 시작
-def start(cmb_width, cmb_space, cmb_format, listbox_file, txt_dest_path, p_var, progress_bar):
-  # 각 옵션들 값을 확인
-  print("가로넓이 : ", cmb_width.get())
-  print("간격 : ", cmb_space.get())
-  print("포맷 : ", cmb_format.get())
+def start(options, gui_elements):
+  # 인자로 받은 클래스 인스턴스에서 데이터에 접근
+  print("가로넓이: ", options.width)
+  print("간격: ", options.space)
+  print("포맷: ", options.format)
 
-  # 파일 목록 확인
-  if listbox_file.size() == 0:
+  # 파일 목록과 저장 경로 접근
+  if gui_elements.listbox_file.size() == 0:
     messagebox.showwarning("경고", "이미지 파일을 추가하세요")
     return
-  file_list = listbox_file.get(0, END)
-  
+  file_list = gui_elements.listbox_file.get(0, END)
+
   # 저장 경로 확인
-  dest_path = txt_dest_path.get()
+  dest_path = gui_elements.txt_dest_path.get()
   if len(dest_path) == 0:
     messagebox.showwarning("경고", "저장 경로를 선택하세요")
     return
   
   # 병합 함수 실행
-  merge_image(file_list, dest_path, p_var, progress_bar)
+  merge_image(file_list, dest_path, gui_elements)
