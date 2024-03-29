@@ -33,7 +33,7 @@ path_frame.pack(fill="x", padx=5, pady=5, ipady=5)
 txt_dest_path = tk.Entry(path_frame)
 txt_dest_path.pack(side="left", fill="x", expand=True, padx=5, pady=5, ipady=4)
 
-btn_dest_path = tk.Button(path_frame, text="찾아보기", width=10)
+btn_dest_path = tk.Button(path_frame, text="찾아보기", width=10, command=lambda: fc.browse_dest_path(txt_dest_path))
 btn_dest_path.pack(side="right", padx=5, pady=5)
 
 # 옵션 프레임
@@ -88,7 +88,13 @@ frame_run.pack(fill="x",padx=5, pady=5)
 btn_close = tk.Button(frame_run, padx=5, pady=5, text="닫기", width=12, command=root.quit)
 btn_close.pack(side="right", padx=5, pady=5)
 
-btn_start = tk.Button(frame_run, padx=5, pady=5, text="시작", width=12)
+btn_start = tk.Button(frame_run, padx=5, pady=5, text="시작", width=12, command=lambda: fc.start(
+  cmb_width,
+  cmb_space,
+  cmb_format,
+  listbox_file,
+  txt_dest_path
+  ))
 btn_start.pack(side="right", padx=5, pady=5)
 
 root.resizable(False, False)
