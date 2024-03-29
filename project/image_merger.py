@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+import functions as fc
 
 root = tk.Tk()
 root.title("escfrog image merger")
@@ -8,11 +9,11 @@ root.title("escfrog image merger")
 file_frame = tk.Frame(root)
 file_frame.pack(fill="x", padx=5, pady=5)
 
-btn_add_file = tk.Button(file_frame, padx=5, pady=5, width=10, text="파일추가")
+btn_add_file = tk.Button(file_frame, padx=5, pady=5, width=10, text="파일추가", command=lambda: fc.add_file(listbox_file))
 btn_add_file.pack(side="left")
 
-btn_del_file = tk.Button(file_frame, padx=5, pady=5, width=10, text="선택삭제")
-btn_del_file.pack(side="right")
+btn_del_file = tk.Button(file_frame, padx=5, pady=5, width=10, text="선택삭제", command=lambda: fc.del_file(listbox_file))
+btn_del_file.pack(side="right") 
 
 # 리스트 프레임
 list_frame = tk.Frame(root)
@@ -21,9 +22,9 @@ list_frame.pack(fill="both", padx=5, pady=5)
 scrollbar = tk.Scrollbar(list_frame)
 scrollbar.pack(side="right", fill="y")
 
-list_file = tk.Listbox(list_frame, selectmode="extended", height=15, yscrollcommand=scrollbar.set)
-list_file.pack(side="left", fill="both", expand=True)
-scrollbar.config(command=list_file.yview)
+listbox_file = tk.Listbox(list_frame, selectmode="extended", height=15, yscrollcommand=scrollbar.set)
+listbox_file.pack(side="left", fill="both", expand=True)
+scrollbar.config(command=listbox_file.yview)
 
 # 저장 경로 프레임
 path_frame = tk.LabelFrame(root, text="저장경로")
