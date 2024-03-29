@@ -31,8 +31,11 @@ def browse_dest_path(txt_dest_path):
 def merge_image(file_list, dest_path, gui_elements):
   images = [Image.open(x) for x in file_list]
 
-  widths = [x.size[0] for x in images]
-  heights = [x.size[1] for x in images]
+  # 각 이미지의 넓이와 높이를 각각 리스트에 담는다.
+  # widths = [x.size[0] for x in images]
+  # heights = [x.size[1] for x in images]
+  widths, heights = zip(*(x.size for x in images)) # unzip 사용
+
 
   # 최대 넓이, 전체 높이 구해옴
   max_width, total_height = max(widths), sum(heights)
