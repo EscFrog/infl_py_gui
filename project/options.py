@@ -1,8 +1,8 @@
 class MergeOptions:
-    def __init__(self, width, space, format):
-        self.width = width
-        self.space = space
-        self.format = format
+    def __init__(self, width_val, space_val, format_val):
+        self.width_val = width_val
+        self.space_val = space_val
+        self.format_val = format_val
 
 
 class GUIElements:

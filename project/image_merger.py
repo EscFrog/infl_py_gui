@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from options import MergeOptions, GUIElements
+from options import GUIElements
 import functions as fc
 
 root = tk.Tk()
@@ -89,13 +89,10 @@ frame_run.pack(fill="x",padx=5, pady=5)
 btn_close = tk.Button(frame_run, padx=5, pady=5, text="닫기", width=12, command=root.quit)
 btn_close.pack(side="right", padx=5, pady=5)
 
-# 옵션 인스턴스 생성
-options = MergeOptions(cmb_width.get(), cmb_space.get(), cmb_format.get())
-
 # GUI 요소 인스턴스 생성
 gui_elements = GUIElements(listbox_file, txt_dest_path, progress_bar, p_var)
 
-btn_start = tk.Button(frame_run, padx=5, pady=5, text="시작", width=12, command=lambda: fc.start(options, gui_elements))
+btn_start = tk.Button(frame_run, padx=5, pady=5, text="시작", width=12, command=lambda: fc.start(cmb_width.get(), cmb_space.get(), cmb_format.get(), gui_elements))
 btn_start.pack(side="right", padx=5, pady=5)
 
 root.resizable(False, False)

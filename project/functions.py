@@ -1,6 +1,7 @@
 import os
 from tkinter import filedialog, END, messagebox
 from PIL import Image
+from options import MergeOptions
 
 # 파일 추가
 def add_file(listbox_file):
@@ -28,41 +29,73 @@ def browse_dest_path(txt_dest_path):
   txt_dest_path.insert(0, folder_selected)
 
 
-def merge_image(file_list, dest_path, gui_elements):
+def merge_image(options, file_list, dest_path, gui_elements):
+  # 가로넓이
+  img_width = options.width_val
+  if img_width == "원본유지":
+    img_width = -1 # -1 일때는 원본 기준으로
+  else:
+    img_width = int(img_width)
+
+  # 간격
+  img_space = options.space_val
+  if img_space == "좁게":
+    img_space = 30
+  elif img_space == "보통":
+    img_space = 60
+  elif img_space == "넓게":
+    img_space = 90
+  else: # 없음
+    img_space = 0
+  
+  # 포맷
+  img_format = options.format_val.lower() # 소문자로 변경
+
   images = [Image.open(x) for x in file_list]
+  
+  # 이미지 사이즈를 리스트에 넣어서 하나씩 처리
+  image_sizes = []
+  if img_width > -1:
+    image_sizes = [(int(img_width), int(img_width * x.size[1] / x.size[0])) for x in images]
+  else: # 원본 사이즈 사용
+    image_sizes = [(x.size[0], x.size[1]) for x in images]
 
   # 각 이미지의 넓이와 높이를 각각 리스트에 담는다.
-  # widths = [x.size[0] for x in images]
-  # heights = [x.size[1] for x in images]
-  widths, heights = zip(*(x.size for x in images)) # unzip 사용
-
+  widths, heights = zip(*(image_sizes)) # unzip 사용
 
   # 최대 넓이, 전체 높이 구해옴
   max_width, total_height = max(widths), sum(heights)
 
   # 스케치북 준비
+
+  if img_space > 0: # 이미지 간격 옵션 적용
+    total_height += (img_space * (len(images) - 1))
+
   result_img = Image.new("RGB", (max_width, total_height), (255, 255, 255)) # 배경 캔버스 생성
 
   y_offset = 0 # y 위치 조정을 위한 변수
   for idx, img in enumerate(images):
+    # width 가 원본 유지가 아닐 경우에는 이미지 크기 조정
+    if img_width > -1:
+      img = img.resize(image_sizes[idx])
+
     result_img.paste(img, (0, y_offset))
-    y_offset += img.size[1] # height 값 만큼 더해줌
+    y_offset += (img.size[1] + img_space) # height 값 + 사용자가 지정한 간격
 
     progress = (idx + 1) / len(images) * 100  # 실제 percent 정보를 계산
     gui_elements.p_var.set(progress)  # p_var를 통해 프로그레스 바 업데이트
     gui_elements.progress_bar.update()  # UI 업데이트
   
-  final_path = os.path.join(dest_path, "result.jpg")
+  file_name = "result." + img_format
+  final_path = os.path.join(dest_path, file_name)
   result_img.save(final_path)
   messagebox.showinfo("알림", "작업이 완료되었습니다.")
 
 
 # 병합 시작
-def start(options, gui_elements):
-  # 인자로 받은 클래스 인스턴스에서 데이터에 접근
-  print("가로넓이: ", options.width)
-  print("간격: ", options.space)
-  print("포맷: ", options.format)
+def start(width_val, space_val, format_val, gui_elements):
+  # 옵션 인스턴스 생성
+  options = MergeOptions(width_val, space_val, format_val)
 
   # 파일 목록과 저장 경로 접근
   if gui_elements.listbox_file.size() == 0:
@@ -77,4 +110,4 @@ def start(options, gui_elements):
     return
   
   # 병합 함수 실행
-  merge_image(file_list, dest_path, gui_elements)
+  merge_image(options, file_list, dest_path, gui_elements)
